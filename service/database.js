@@ -153,7 +153,5 @@ var initialise = function (url, needsSSL) {
     errors:errors,
     initialise: initialise,
     getEvents:getEvents,
-    getEvent:getEvent,
-    getThings:getThings,
-    getThing,getThing
+    getEvent:getEvent
   };
