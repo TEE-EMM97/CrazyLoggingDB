@@ -1,5 +1,7 @@
 'use strict';
 
+var cors = require('cors');
+
 var fs = require('fs'),
     path = require('path'),
     http = require('http');
@@ -42,3 +44,14 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   });
 
 });
+
+var database = require('./service/database');
+var dbUrl = process.env.DATABASE_URL;
+
+// database connection
+database.initialise(dbUrl, true);
+
+// Cross Origin Requests - must have this, as we are an API.
+// Without it, browsers running SPWAs from domains different to ours (e.g. github pages)
+// will reject HTTP requests during pre-flight check.
+app.use(cors())

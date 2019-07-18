@@ -42,16 +42,48 @@ exports.deleteThingsThingid = function(thingid) {
  * returns List
  **/
 exports.getEvents = function($page,lat,lon,date,id,$size,postcode,thing,$sort) {
+  
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "{\"id\":\"sample id\",\"postcode\":\"M1 5GD\",\"date\":1511395200000,\"thing\":\"sample thing\",\"lat\":1.1,\"lon\":1.1}", "{\"id\":\"sample id\",\"postcode\":\"M1 5GD\",\"date\":1511395200000,\"thing\":\"sample thing\",\"lat\":1.1,\"lon\":1.1}" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+        database.getEvents(id, date, lat, lon, postcode, thing, $page, $size, $sort)
+        .then(resolve)
+        .catch(function(e){
+           switch(e.statusCode){
+             case database.errors.DATABASE_ERROR:
+             // remove database specific error - will leak information.
+             reject (errApi.create500Error("something terrible happened with the database. Sorry..."));
+             break;
+             case database.errors.INTERNAL_ERROR:
+             reject(errApi.create500Error(e.message));
+             break;
+             case database.errors.PARAMETER_ERROR:
+             reject(errApi.create400Error(e.message));
+             break;
+           }
+        })
   });
 }
+
+module.exports.getEvents =  function getEvents (req, res, next) {
+  var $page = req.swagger.params['$page'].value || null;
+  var lat = req.swagger.params['lat'].value || null;
+  var lon = req.swagger.params['lon'].value || null;
+  var date = req.swagger.params['date'].value || null;
+  var id = req.swagger.params['id'].value || null;
+  var $size = req.swagger.params['$size'].value || null;
+  var postcode = req.swagger.params['postcode'].value || null;
+  var thing = req.swagger.params['thing'].value || null;
+  var $sort = req.swagger.params['$sort'].value || null;
+
+  
+  var response =  Wildlifelog.getEvents($page,lat,lon,date,id,$size,postcode,thing,$sort)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, utils.respondWithCode(response.statusCode, response));
+    });
+
+};
 
 
 /**
