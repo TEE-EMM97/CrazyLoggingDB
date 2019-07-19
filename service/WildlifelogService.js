@@ -63,27 +63,27 @@ exports.getEvents = function($page,lat,lon,date,id,$size,postcode,thing,$sort) {
   });
 }
 
-module.exports.getEvents =  function getEvents (req, res, next) {
-  var $page = req.swagger.params['$page'].value || null;
-  var lat = req.swagger.params['lat'].value || null;
-  var lon = req.swagger.params['lon'].value || null;
-  var date = req.swagger.params['date'].value || null;
-  var id = req.swagger.params['id'].value || null;
-  var $size = req.swagger.params['$size'].value || null;
-  var postcode = req.swagger.params['postcode'].value || null;
-  var thing = req.swagger.params['thing'].value || null;
-  var $sort = req.swagger.params['$sort'].value || null;
+// module.exports.getEvents =  function getEvents (req, res, next) {
+//   var $page = req.swagger.params['$page'].value || null;
+//   var lat = req.swagger.params['lat'].value || null;
+//   var lon = req.swagger.params['lon'].value || null;
+//   var date = req.swagger.params['date'].value || null;
+//   var id = req.swagger.params['id'].value || null;
+//   var $size = req.swagger.params['$size'].value || null;
+//   var postcode = req.swagger.params['postcode'].value || null;
+//   var thing = req.swagger.params['thing'].value || null;
+//   var $sort = req.swagger.params['$sort'].value || null;
 
   
-  var response =  Wildlifelog.getEvents($page,lat,lon,date,id,$size,postcode,thing,$sort)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, utils.respondWithCode(response.statusCode, response));
-    });
+//   var response =  Wildlifelog.getEvents($page,lat,lon,date,id,$size,postcode,thing,$sort)
+//     .then(function (response) {
+//       utils.writeJson(res, response);
+//     })
+//     .catch(function (response) {
+//       utils.writeJson(res, utils.respondWithCode(response.statusCode, response));
+//     });
 
-};
+// };
 
 
 /**
