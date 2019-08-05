@@ -7,9 +7,30 @@
  * eventid String Identifier of the Event
  * no response value expected for this operation
  **/
-exports.deleteEventsEventid = function(eventid) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.deleteEventsEventid = function (eventid) {
+  return new Promise(function (resolve, reject) {
+    database.deleteEvent(eventid)
+      .then(function (result) {
+        if (result) { // truthy row count > 0
+          resolve(result);
+        } else {
+          reject(errApi.create404Error("Couldn't find anthing matching the request URI."));
+        }
+      })
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
   });
 }
 
@@ -20,11 +41,33 @@ exports.deleteEventsEventid = function(eventid) {
  * thingid String Identifier of the Thing
  * no response value expected for this operation
  **/
-exports.deleteThingsThingid = function(thingid) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.deleteThingsThingid = function (thingid) {
+  return new Promise(function (resolve, reject) {
+    database.deleteThing(thingid)
+      .then(function (result) {
+        if (result) { // truthy row count > 0
+          resolve(result);
+        } else {
+          reject(errApi.create404Error("Couldn't find anthing matching the request URI."));
+        }
+      })
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
   });
 }
+
 
 
 /**
@@ -41,25 +84,125 @@ exports.deleteThingsThingid = function(thingid) {
  * $sort String Order in which to retrieve the results. Multiple sort criteria can be passed. Example: sort=age ASC,height DESC (optional)
  * returns List
  **/
-exports.getEvents = function($page,lat,lon,date,id,$size,postcode,thing,$sort) {
-  
-  return new Promise(function(resolve, reject) {
-        database.getEvents(id, date, lat, lon, postcode, thing, $page, $size, $sort)
-        .then(resolve)
-        .catch(function(e){
-           switch(e.statusCode){
-             case database.errors.DATABASE_ERROR:
-             // remove database specific error - will leak information.
-             reject (errApi.create500Error("something terrible happened with the database. Sorry..."));
-             break;
-             case database.errors.INTERNAL_ERROR:
-             reject(errApi.create500Error(e.message));
-             break;
-             case database.errors.PARAMETER_ERROR:
-             reject(errApi.create400Error(e.message));
-             break;
-           }
-        })
+exports.getEvents = function ($page, lat, lon, date, id, $size, postcode, thing, $sort) {
+
+  return new Promise(function (resolve, reject) {
+    database.getEvents(id, date, lat, lon, postcode, thing, $page, $size, $sort)
+      .then(resolve)
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
+  });
+}
+
+
+/**
+ * Loads a Event
+ *
+ * eventid String Identifier of the Event
+ * returns Event
+ **/
+exports.getEventsEventid = function (eventid) {
+  return new Promise(function (resolve, reject) {
+    database.getEvent(eventid)
+      .then(function (result) {
+        if (result && result.length > 0) {
+          resolve(result);
+        } else {
+          reject(errApi.create404Error("Couldn't find anthing matching the request URI."));
+        }
+      })
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
+  });
+}
+
+
+/**
+ * Loads a list of Thing
+ *
+ * $size String Size of the page to retrieve. Integer value (optional)
+ * id String Allows to filter the collections of result by the value of field id (optional)
+ * $sort String Order in which to retrieve the results. Multiple sort criteria can be passed. Example: sort=age ASC,height DESC (optional)
+ * name String Allows to filter the collections of result by the value of field name (optional)
+ * $page String Number of the page to retrieve. Integer value. (optional)
+ * returns List
+ **/
+exports.getThings = function ($size, id, $sort, name, $page) {
+  return new Promise(function (resolve, reject) {
+    database.getThings(id, name, $page, $size, $sort)
+      .then(resolve)
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
+  });
+}
+
+
+/**
+ * Loads a Thing
+ *
+ * thingid String Identifier of the Thing
+ * returns Thing
+ **/
+exports.getThingsThingid = function (thingid) {
+  return new Promise(function (resolve, reject) {
+    database.getThing(thingid)
+      .then(function (result) {
+        if (result && result.length > 0) {
+          resolve(result);
+        } else {
+          reject(errApi.create404Error("Couldn't find anthing matching the request URI."));
+        }
+      })
+      .catch(function (e) {
+        switch (e.statusCode) {
+          case database.errors.DATABASE_ERROR:
+            // remove database specific error - will leak information.
+            reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+            break;
+          case database.errors.INTERNAL_ERROR:
+            reject(errApi.create500Error(e.message));
+            break;
+          case database.errors.PARAMETER_ERROR:
+            reject(errApi.create400Error(e.message));
+            break;
+        }
+      })
   });
 }
 
@@ -117,13 +260,22 @@ exports.getEventsEventid = function(eventid) {
  **/
 exports.getThings = function($size,id,$sort,name,$page) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "{\"id\":\"sample id\",\"name\":\"Jay\"}", "{\"id\":\"sample id\",\"name\":\"Jay\"}" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    database.getThings(id, name, $page, $size, $sort)
+    .then(resolve)
+    .catch(function (e) {
+      switch (e.statusCode) {
+        case database.errors.DATABASE_ERROR:
+          // remove database specific error - will leak information.
+          reject(errApi.create500Error("something terrible happened with the database. Sorry..."));
+          break;
+        case database.errors.INTERNAL_ERROR:
+          reject(errApi.create500Error(e.message));
+          break;
+        case database.errors.PARAMETER_ERROR:
+          reject(errApi.create400Error(e.message));
+          break;
+      }
+    })
   });
 }
 
@@ -205,22 +357,5 @@ exports.putEventsEventid = function(eventid,body) {
 }
 
 
-/**
- * Stores a Thing
- *
- * thingid String Identifier of the Thing
- * body Thing 
- * returns Thing
- **/
-exports.putThingsThingid = function(thingid,body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{\"id\":\"sample id\",\"name\":\"Jay\"}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+
 

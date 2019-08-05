@@ -13,9 +13,12 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
+    "auth-header": "^1.0.0",
     "connect": "^3.2.0",
     "cors": "^2.8.5",
     "js-yaml": "^3.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.6.0",
     "natives": "^1.1.6",
     "pg": "^7.11.0",
     "swagger-tools": "0.10.1"

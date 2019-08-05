@@ -1,0 +1,1 @@
+var auth_config = {"clientId":"LnPteJIqpI9kbk0xeGqNPLtHjPXlP0wv","appName":"SwaggerUI","clientSecret":"dummy","realm":"dummy","scopeSeparator":" ","additionalQueryStringParams":{"audience":"https://www.urbanwild/crazyloggingadmin","nonce":"123456"}}
